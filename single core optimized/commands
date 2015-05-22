@@ -1,3 +1,0 @@
-gcc sparse.c -lfftw3 -o sparse
-
-gcc -O3  ist.c -lfftw3 -o ist

@@ -1,11 +1,28 @@
+/*
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+    
+    by Badruddin Kamal developed as part of my ANU COMP8715 Project
+*/
+
+
 # include <stdlib.h>
 # include <stdio.h>
 # include <time.h>
-# include <string.h>
+#include <string.h>
 # include <fftw3.h>
-# include <time.h>
-# include <math.h>
-
+#include <time.h>
+#include <math.h>
 
 char *append(const char *orig, char c)
 {
@@ -18,21 +35,17 @@ char *append(const char *orig, char c)
 }
 
 
-int main(void)
+void calc_ist(int nx,int ny,int iter,char* file_in,char* file_out,double thresh_percent)
 {
- int i,j;
-  int nx = 256;
-  int ny = 256;
+  int i,j;
   int sparse_len=0;
   double *out,*in,*final;
   int *sparse=malloc ( sizeof ( int ) * nx * ny  );
   fftw_plan plan_backward,plan_forward;
   char ch;
   FILE *fp;
-  int iter =500;
   int iter_count=0;
   double max,thresh;
-  double thresh_percent=0.75;
 
 
 //Create the input & final array.
@@ -65,7 +78,7 @@ int main(void)
 }
 
 // simple file reader for x,y,sigma,I\n per line
-  fp = fopen("sample_sparse_NMR.txt","r");
+  fp = fopen(file_in,"r");
 
   if( fp == NULL )
    {
@@ -266,7 +279,7 @@ printf("  Time elapsed: %f\n", ((double)clock() - start) / CLOCKS_PER_SEC);
 
 //print output
 
-FILE *f = fopen("istout.txt", "w");
+FILE *f = fopen(file_out, "w");
 if (f == NULL)
 {
     printf("Error opening file!\n");
@@ -276,81 +289,11 @@ if (f == NULL)
    {
    for ( j = 0; j < ny/2; j++ )
     {
-     fprintf (f, "%4d,%4d,%8.15f\n", i, j, final[i*ny+j] );
+     fprintf (f, "%4d,%4d,%15.8f\n", i, j, final[i*ny+j] );
     }
   } 
 fclose(f);
 
-
-// load orginal file for rms
-  for ( i = 0; i < nx; i++ )
- {
-   for ( j = 0; j < ny; j++ )
-  {
-   in[i*ny+j] = 0.0;
- }
-}
-
-
-  fp = fopen("sample_NMR.txt","r");
-
-  if( fp == NULL )
-   {
-      perror("Error while opening the file.\n");
-      exit(EXIT_FAILURE);
-   }
-
-  type =0;
-  //read csv file
-  while( ( ch = fgetc(fp) ) != EOF ){
-
-      switch (ch ){
-       case '"':
-       case '\'': /* can ' start a quoted string? */
-           break;
-       case ',':
-            type= type+1;
-            break;
-       case '\n':
-            i=atoi(x);
-            j=atoi(y);
-            in[i*ny+j] = strtod(I,NULL);
-            *x='\0';
-            *y='\0';
-            *I='\0';
-            type=0;
-           break;
-        default:
-	   if(type==0){
-  	     x=append(x,ch);
-	   }else if(type==1){
-              y=append(y,ch);
-	   }else if(type==2){
-            I=append(I,ch);
-	   }
-           break;
-
-
-      }
-
-  }
-
-
-  fclose(fp);
-//calculate rms
-double rms=0.0;
-
-  for ( i = 0; i < nx; i++ )
- {
-   for ( j = 0; j < ny; j++ )
-  {
-   double delta = in[i*ny+j] - final[i*ny+j];
-   rms=rms+delta*delta;
- }
-}
-   rms=sqrt(rms/(nx*ny));
-
-   printf ("  RMS : %8.15f\n\n", rms );
 
 
 //Free up the allocated memory.
@@ -366,6 +309,4 @@ double rms=0.0;
   free(y);
   free(I);
 
-
-return 0;
 }

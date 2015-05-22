@@ -1,0 +1,57 @@
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+    
+    by Badruddin Kamal developed as part of my ANU COMP8715 Project
+
+	------------------------------------------------------------------------------	
+	ITTERATIVE SOFT THRESHOLDING(IST) FOR SPARSE NUCLEAR MAGNETIC RESONANCE(NMR):
+	------------------------------------------------------------------------------
+	Requirements:
+	Linux
+	c-(gcc)
+	swig
+	FFTW3 (lfftw3)
+	Python2.7 or Relative version
+
+	Optimized for a single core
+
+	To Make:
+
+	make CFLAGS="-I {$USERNAME}/path/to/python*.*"
+
+	To Use:
+
+	IN/OUT File format per line
+	x,y,I
+
+	Note*- In the in file we take the sparse file of a nx*ny(Ignoring Sigma) NMR Data in a 2nx*2ny grid in the time domain(This data will be sparse in the Time 		Domain Not Frequency Domain). This will generate the output file in the original nx*ny domain.
+
+		To Run:
+		
+		$python main.py
+
+		We set the IN/OUT files.
+
+		In the GUI for dimensions we insert the original nx*ny dimensions
+
+		For the best performance iterations should be > 200 and 0.6 > thereshold < 0.9 (Comparing to 128*128 grid)
+
+		Click calculate.
+		
+		Data will be written in output file and spectra contours shown
+            
+
+	To Test:
+       		Use sample_sparse_NMR.txt(sparsified version of sample_NMR.txt in **time domain**) as input file and output file istout.txt
+	
